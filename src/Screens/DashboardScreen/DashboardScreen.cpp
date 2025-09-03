@@ -6,7 +6,7 @@
 #include <Arduino.h>
 #include "../../Utils/TimeUtils.h"   // relative path
 #include "../ScreenManager.h"
-#include "../TestScreen/TestScreen.h"
+#include "../../Utils/ButtonUtils.h"
 
 extern TFT_eSPI tft;
 
@@ -25,6 +25,8 @@ void DashboardScreen::draw(){
 
     uint8_t currentY = 25;
     int8_t lineHeight = 8; // size 4 font height + spacing
+
+    pp_drawBox(0, currentY, 128, 180, TFT_BLACK, TFT_BLACK,0, false);
 
     // Display current time
     String currentTime = TimeUtils::getCurrentTime();
@@ -94,13 +96,17 @@ if (now - lastUpdate >= 1000) { // Check if 1 second passed
 }
 }
 
-void DashboardScreen::handleNavigation(){
-    if(digitalRead(L_BTN_PIN) == LOW) {
+int16_t DashboardScreen::handleNavigation(){
+    if(ButtonUtils::isLeftButtonPressed()) {
         Serial.println("Left button pressed - Navigate to previous screen");
         // move to next screen
-    }else if(digitalRead(R_BTN_PIN) == LOW) {
+        return 1;
+    }else if(ButtonUtils::isRightButtonPressed()) {
         Serial.println("Right button pressed - Navigate to next screen");
         // move to next screen
+        return 1;
+    }else{
+        return -1;
     }
     //screenM.draw();
 }

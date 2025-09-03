@@ -26,9 +26,10 @@ public:
         }
     }
 
-    void handleNavigation(){
+    int16_t handleNavigation(){
         if(currentScreen) {
-            currentScreen->handleNavigation();
+            return currentScreen->handleNavigation();
         }
+        return -1;
     }
 };

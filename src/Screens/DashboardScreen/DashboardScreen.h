@@ -12,5 +12,5 @@ private:
 public:
     void draw() override;
     void update() override;
-    void handleNavigation() override;
+    int16_t handleNavigation() override;
 };

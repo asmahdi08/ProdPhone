@@ -7,8 +7,8 @@
 
 #include "Drawers.h"
 
-#include "Screens/DashboardScreen/DashboardScreen.h"
 #include "Screens/ScreenManager.h"
+#include "Screens/ScreenRegistries.h"
 
 
 
@@ -29,7 +29,7 @@ void drawBasicExample();
 void setupTime();
 
 ScreenManager screenManager;
-DashboardScreen dashboardScreen;
+ScreenRegistries screenRegistries;
 
 void setup() {
   Serial.begin(115200);
@@ -64,7 +64,7 @@ void setup() {
 
   drawTopBar();
 
-  screenManager.setScreen(&dashboardScreen);
+  screenManager.setScreen(screenRegistries.getScreen(0)); // set to dashboard screen
   screenManager.draw();
 
 }
@@ -84,15 +84,14 @@ void loop() {
 
     
   }
-  
-  screenManager.update();
-  screenManager.handleNavigation();
 
-  if (digitalRead(L_BTN_PIN) == LOW) {
-    Serial.println("Left button pressed");
-  }
-  if (digitalRead(R_BTN_PIN) == LOW) {
-    Serial.println("Right button pressed");
+  screenManager.update();
+
+  int16_t screenId = screenManager.handleNavigation();
+
+  if(screenId != -1) {
+    screenManager.setScreen(screenRegistries.getScreen(screenId));
+    screenManager.draw();
   }
 }
 

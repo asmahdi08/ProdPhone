@@ -9,6 +9,5 @@ private:
 public:
     void draw() override;
     void update() override;
-    void handleNavigation() override;
-    void init() override;
+    int16_t handleNavigation() override;
 };

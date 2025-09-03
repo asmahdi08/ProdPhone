@@ -8,7 +8,6 @@ public:
     virtual void update() {}     // optional
     virtual void init() {}
     virtual void handleInput() {}
-    virtual void handleNavigation() {}
-
-protected:
+    virtual int16_t handleNavigation() {}
+    //virtual uint16_t getScreenId() const { return 0; } // optional, default to 0
 };
