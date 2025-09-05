@@ -7,8 +7,10 @@
 #include "../../Utils/TimeUtils.h"   // relative path
 #include "../ScreenManager.h"
 #include "../../Utils/ButtonUtils.h"
+#include "../../Utils/Logging/Logging.h"
 
 extern TFT_eSPI tft;
+extern Logger logger;
 
 namespace {
     float getFreeRamPercentage(){
@@ -98,11 +100,11 @@ if (now - lastUpdate >= 1000) { // Check if 1 second passed
 
 int16_t DashboardScreen::handleNavigation(){
     if(ButtonUtils::isLeftButtonPressed()) {
-        Serial.println("Left button pressed - Navigate to previous screen");
+        logger.log_info("Left button pressed - Navigate to previous screen");
         // move to next screen
         return 1;
     }else if(ButtonUtils::isRightButtonPressed()) {
-        Serial.println("Right button pressed - Navigate to next screen");
+        logger.log_info("Right button pressed - Navigate to next screen");
         // move to next screen
         return 1;
     }else{

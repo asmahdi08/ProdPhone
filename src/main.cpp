@@ -4,6 +4,7 @@
 #include "time.h"
 #include "Utils/TimeUtils.h"
 #include "Definitions.h"
+#include "Utils/Logging/Logging.h"
 
 #include "Drawers.h"
 
@@ -30,6 +31,7 @@ void setupTime();
 
 ScreenManager screenManager;
 ScreenRegistries screenRegistries;
+Logger logger;
 
 void setup() {
   Serial.begin(115200);
@@ -52,7 +54,7 @@ void setup() {
     delay(500);
     Serial.print(".");
   }
-  Serial.println("WiFi connected");
+  logger.log_info("WiFi connected.");
   
   // Configure NTP time synchronization
   setupTime();
@@ -92,6 +94,7 @@ void loop() {
   if(screenId != -1) {
     screenManager.setScreen(screenRegistries.getScreen(screenId));
     screenManager.draw();
+    Serial.println("Logs: " + logger.getLogs());
   }
 }
 
@@ -125,15 +128,15 @@ void drawTopBar(){
 }
 
 void setupTime() {
-  Serial.println("Configuring time with NTP servers...");
+  logger.log_info("Configuring time with NTP servers...");
   configTime(gmtOffset_sec, daylightOffset_sec, ntpServer1, ntpServer2);
   
   // Wait for time to be set
-  Serial.print("Waiting for NTP time sync: ");
+  logger.log_info("Waiting for NTP time sync...");
   struct tm timeinfo;
   int attempts = 0;
   while (!getLocalTime(&timeinfo) && attempts < 10) {
-    Serial.print(".");
+    logger.log_info(".");
     delay(1000);
     attempts++;
   }
@@ -141,7 +144,9 @@ void setupTime() {
   if (attempts < 10) {
     Serial.println(" Time synchronized!");
     Serial.print("Current time: ");
-    Serial.println(&timeinfo, "%A, %B %d %Y %H:%M:%S");
+    char buf[30];
+    strftime(buf, sizeof(buf), "%A, %B %d %Y %H:%M:%S", &timeinfo);
+    Serial.println(buf);
   } else {
     Serial.println(" Time sync failed!");
   }
